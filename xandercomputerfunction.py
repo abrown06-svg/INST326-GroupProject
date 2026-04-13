@@ -1,6 +1,19 @@
 import random
 from collections import Counter
+'''
+The computer function checks whether a word can be formed from the base word and tests the letter count. Then it searches through two difficulties.
+The computer can select up to 4 words.
+Difficulty Levels:
+Easy: Chooses the shortest words
+Hardest: Chooses the longest possible for the most points
 
+Args: 
+base_word(str): the word used in the round
+difficulty (str): the difficulty level "easy" or "hard."
+
+Returns:
+tuple: a list of the words selected with a score.
+'''
 # Sample to show an example
 WORD_LIST = [
     "cat", "dog", "tire", "tar", "art", "car", "arc",
