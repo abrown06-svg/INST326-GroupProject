@@ -1,4 +1,15 @@
 def calculate_score(submitted_words, word_list, computer_words):
+    """ 
+        Calculates the total score for the user based on valid word submissions,
+        word length, and bonus conditions.
+        
+        Args: 
+            submitted_words (list): all guesses made 
+            word_list (list): valid guesses 
+            computer_words (list): words found by computer 
+            
+        Returns: int: total score for the user 
+    """
 
     score = 0
 
@@ -36,7 +47,7 @@ def calculate_score(submitted_words, word_list, computer_words):
 
         score += points
 
-    # 🔥 longest word comparison bonus (FIXED LOCATION)
+    #longest word comparison bonus (FIXED LOCATION)
     user_longest = ""
     for word in submitted_words:
         if word in word_list and len(word) > len(user_longest):
@@ -52,6 +63,8 @@ def calculate_score(submitted_words, word_list, computer_words):
 
     return score
 
+
+#test code
 word_list = [
     "chute",
     "catch",
