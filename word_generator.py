@@ -15,7 +15,7 @@ def word_generator(file_words, difficulty):
     
     dictionary = set(w.lower() for w in nltk_words.words())
     
-    min_letters = 4
+    min_letters = 3
     max_letters = 12
     
     filtered_words = []
@@ -34,7 +34,7 @@ def word_generator(file_words, difficulty):
         
         possible_words_count = 0
         for dict_word in dictionary:
-            if len(dict_word) >= 4:
+            if len(dict_word) >= 3:
                 if all(letter in candidate for letter in dict_word):
                     possible_words_count += 1
             if possible_words_count >= 3:
