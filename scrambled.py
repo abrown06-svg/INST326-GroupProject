@@ -1,0 +1,252 @@
+import random
+from collections import Counter
+import nltk
+nltk.download('words')
+from nltk.corpus import words as nltk_words
+
+#One shared word list for entire game
+dictionary = set(w.lower() for w in nltk_words.words())
+'''
+The computer function checks whether a word can be formed from the base word and tests the letter count. Then it searches through two difficulties.
+The computer can select up to 4 words.
+Difficulty Levels:
+Easy: Chooses the shortest words
+Hardest: Chooses the longest possible for the most points
+
+Args: 
+base_word(str): the word used in the round
+difficulty (str): the difficulty level "easy" or "hard."
+
+Returns:
+tuple: a list of the words selected with a score.
+'''
+
+# Verify if words can be generated from the word list
+def can_form_word(base_word, attempt_word):
+    base_count = Counter(base_word.lower())
+    test_count = Counter(attempt_word.lower())
+    
+    for letter in test_count:
+        if test_count[letter] > base_count.get(letter, 0):
+            return False
+    return True
+
+# Score function (simple: length = points)
+def score_word(word):
+    return len(word)
+
+# Computer player function
+def computer_player(base_word, difficulty="easy"):
+    valid_words = [w for w in dictionary if can_form_word(base_word, w)]
+    
+    if difficulty == "easy":
+        # Easy: pick up to 4 random short words
+        choices = [w for w in valid_words if len(w) <= 4]
+        computer_words = random.sample(choices, min(4, len(choices)))
+    
+    elif difficulty == "hard":
+        # Hard: pick best scoring words (longest)
+        valid_words.sort(key=lambda w: len(w), reverse=True)
+        computer_words = valid_words[:4]
+    
+    else:
+        computer_words = []
+    
+    score = sum(score_word(w) for w in computer_words)
+    
+    return computer_words, score
+
+def word_generator(file_words, difficulty):
+    """
+    Randomly selects and scrambles words based on difficulty for a given round. 
+    Args:
+        file_words (list[str]): List of all words loaded from the file.
+        difficulty (str): Either "easy", or "hard".
+    Returns:
+        list[str]: Letters selected for the round, shuffled into random order.
+    """
+    
+    
+    
+    filtered_words = []
+    for word in file_words:
+        word = word.lower().strip()
+        if 4<= len(word) <=12:
+            if difficulty == "easy" and len(word) <= 6:
+                filtered_words.append(word)
+            elif difficulty == "hard" and len(word) > 6:
+                filtered_words.append(word)
+                
+    random.shuffle(filtered_words)
+    for candidate in filtered_words:
+        scrambled_words = list(candidate)
+        random.shuffle(scrambled_words)
+        
+        possible_words_count = 0
+        for dict_word in dictionary:
+            if len(dict_word) >= 3:
+                if can_form_word(candidate, dict_word):
+                    possible_words_count += 1
+            if possible_words_count >= 3:
+                break
+        
+        if possible_words_count >= 3:
+            return candidate, scrambled_words
+    
+    return []
+
+
+def validate_player_words(base_word, submitted_words,word_list):
+    """
+    Checks the Player's submitted words for one round.
+    This function check whether each word:
+    1.is in the allowed word list 
+    2.can be made from the base word
+    3. is not repeated
+    
+    Args: 
+    base_word(str): the main word used in the round
+    submitted _words (list[str]):the words enterd by the player
+    word_list(list[str]): a list od valid words for the game
+    
+    Returns: 
+    dict: a dictionary with valid words,invalid words, duplcate and the total score for valid words
+    """
+    
+    valid_words= []
+    invalid_words= []
+    duplicate_words= []
+    used_words= []
+    total_score=0
+    
+    base_word = base_word.lower()
+    
+    for word in submitted_words:
+        word = word.lower().strip()
+        
+        if word in used_words:
+            duplicate_words.append(word)
+            continue
+        
+        used_words.append(word)
+        
+        if word not in word_list:
+            invalid_words.append(word)
+            continue 
+        
+        base_letters = list(base_word)
+        can_make_word = True
+        
+        for letter in word:
+            if letter in base_letters:
+                base_letters.remove(letter)
+            else:
+                can_make_word = False
+                break
+            
+        if can_make_word:
+            valid_words.append(word)
+            total_score += len(word)
+        else:
+            invalid_words.append(word)
+    
+    return{
+        "valid_words": valid_words,
+        "invalid_words": invalid_words,
+        "duplicate_words": duplicate_words,
+        "score":total_score
+    }    
+
+
+
+def calculate_score(submitted_words, word_list, computer_words):
+    """ 
+        Calculates the total score for the user based on valid word submissions,
+        word length, and bonus conditions.
+        
+        Args: 
+            submitted_words (list): all guesses made 
+            word_list (list): valid guesses 
+            computer_words (list): words found by computer 
+            
+        Returns: int: total score for the user 
+    """
+
+    score = 0
+
+    for word in set(submitted_words):
+
+        if len(word) < 3:
+            score -= 1
+            continue
+
+        if word not in word_list:
+            score -= 1
+            continue
+
+        # base score
+        length = len(word)
+
+        if length == 3:
+            points = 3
+        elif length == 4:
+            points = 4
+        elif length == 5:
+            points = 5
+        else:
+            points = 6
+
+        # bonus if computer didn't find it
+        if word not in computer_words:
+            points += 2
+
+        # rare letter bonus
+        for letter in word:
+            if letter in "jyvzqx":
+                points += 1
+                break
+
+        score += points
+
+    #longest word comparison bonus (FIXED LOCATION)
+    user_longest = ""
+    for word in submitted_words:
+        if word in word_list and len(word) > len(user_longest):
+            user_longest = word
+
+    computer_longest = ""
+    for word in computer_words:
+        if len(word) > len(computer_longest):
+            computer_longest = word
+
+    if len(user_longest) > len(computer_longest):
+        score += 5
+
+    return score
+
+
+
+if __name__ == "__main__":
+
+    difficulty = "easy"
+
+    base_word, scrambled = word_generator(list(dictionary), difficulty)
+
+    if not base_word:
+        print("Failed to generate word")
+        exit()
+
+    print("Scrambled letters:", " ".join(scrambled))
+
+    # TEMP placeholders 
+    submitted_words = []
+    word_list = dictionary
+    computer_words, _ = computer_player(base_word, difficulty)
+
+    # TODO: replace submitted_words with real user input
+
+    result = validate_player_words(base_word, submitted_words, word_list)
+    score = calculate_score(submitted_words, word_list, computer_words)
+
+    print(result)
+    print(score)
