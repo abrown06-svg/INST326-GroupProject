@@ -3,9 +3,21 @@ from collections import Counter
 import nltk
 nltk.download('words')
 from nltk.corpus import words as nltk_words
+from argparse import ArgumentParser
 
 #One shared word list for entire game
 dictionary = set(w.lower() for w in nltk_words.words())
+
+#Class
+class WordGame:
+    def __init__(self, dictionary, difficulty="easy"):
+        self.dictionary = dictionary
+        self.difficulty = difficulty
+        self.base_word = None
+        self.scrambled = None
+        self.submitted_words = []
+        self.computer_words = []
+        self.score = 0
 '''
 The computer function checks whether a word can be formed from the base word and tests the letter count. Then it searches through two difficulties.
 The computer can select up to 4 words.
@@ -228,25 +240,30 @@ def calculate_score(submitted_words, word_list, computer_words):
 
 if __name__ == "__main__":
 
-    difficulty = "easy"
+    parser = ArgumentParser()
+    parser.add_argument("difficulty")
+    args = parser.parse_args()
+    
+    difficulty = args.difficulty
+    game = WordGame(dictionary, difficulty)
 
-    base_word, scrambled = word_generator(list(dictionary), difficulty)
-
-    if not base_word:
-        print("Failed to generate word")
-        exit()
+    base_word, scrambled = game.generate_round(list(dictionary))
 
     print("Scrambled letters:", " ".join(scrambled))
+    
+    while True:
+        word = input("Enter Word: ")
+        
+        if word == "":
+            break
+        
+        game.submitted_words.append(word)
 
-    # TEMP placeholders 
-    submitted_words = []
-    word_list = dictionary
-    computer_words, _ = computer_player(base_word, difficulty)
+    game.get_computer_words()
 
-    # TODO: replace submitted_words with real user input
 
-    result = validate_player_words(base_word, submitted_words, word_list)
-    score = calculate_score(submitted_words, word_list, computer_words)
+    result = game.validate()
+    score = game.calculate()
 
     print(result)
     print(score)
