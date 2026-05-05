@@ -49,8 +49,7 @@ def score_word(word):
 
 # Computer player function
 def computer_player(base_word, difficulty="easy"):
-    valid_words = [w for w in dictionary if can_form_word(base_word, w)]
-    
+    valid_words = [w for w in dictionary if can_form_word(base_word, w) and len(w) >= 4]    
     if difficulty == "easy":
         # Easy: pick up to 4 random short words
         choices = [w for w in valid_words if len(w) <= 4]
@@ -129,7 +128,7 @@ def validate_player_words(base_word, submitted_words,word_list):
     invalid_words= []
     duplicate_words= []
     used_words= []
-    total_score=0
+    total_score= 0
     
     base_word = base_word.lower()
     
@@ -247,7 +246,9 @@ if __name__ == "__main__":
     difficulty = args.difficulty
     game = WordGame(dictionary, difficulty)
 
-    base_word, scrambled = game.generate_round(list(dictionary))
+    base_word, scrambled = word_generator(list(dictionary), difficulty)
+    game.base_word = base_word
+    game.scrambled = scrambled
 
     print("Scrambled letters:", " ".join(scrambled))
     
@@ -259,11 +260,36 @@ if __name__ == "__main__":
         
         game.submitted_words.append(word)
 
-    game.get_computer_words()
+    game.computer_words, computer_score = computer_player(base_word, difficulty)
 
 
-    result = game.validate()
-    score = game.calculate()
-
-    print(result)
-    print(score)
+    result = validate_player_words(base_word, game.submitted_words, dictionary)
+    score = calculate_score(game.submitted_words, dictionary, game.computer_words)
+    
+    print("\n" + "=================")
+    print("      ROUND RESULTS")
+    print("=================")
+    print(f"The Base word was: {base_word}")
+    print()
+    
+    print("--- YOUR STATS ---")
+    print(f"Valid words    : {result['valid_words']}")
+    if result['invalid_words']:
+        print(f"Invalid words  : {result['invalid_words']}")
+    if result['duplicate_words']:
+        print(f"Duplicates     : {result['duplicate_words']}")
+    print(f"Your score     : {score}")
+    
+    print()
+    print("--- COMPUTER STATS  ---")
+    print(f"Computer words : {game.computer_words}")
+    print(f"Computer score : {computer_score}")
+    print()
+    print("=================")
+    if score > computer_score:
+        print(f"   YOU WIN! ({score} vs {computer_score})")
+    elif computer_score > score:
+        print(f"   COMPUTER WINS! ({computer_score} vs {score})")
+    else:
+        print(f"   TIE! ({score} vs {computer_score})")
+    print("=================")
