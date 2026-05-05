@@ -6,18 +6,11 @@ from nltk.corpus import words as nltk_words
 from argparse import ArgumentParser
 
 #One shared word list for entire game
-dictionary = set(w.lower() for w in nltk_words.words())
+dictionary = set(
+    w.lower() for w in nltk_words.words()
+    if w.isalpha() and 3 <= len(w) <= 12
+)
 
-#Class
-class WordGame:
-    def __init__(self, dictionary, difficulty="easy"):
-        self.dictionary = dictionary
-        self.difficulty = difficulty
-        self.base_word = None
-        self.scrambled = None
-        self.submitted_words = []
-        self.computer_words = []
-        self.score = 0
 '''
 The computer function checks whether a word can be formed from the base word and tests the letter count. Then it searches through two difficulties.
 The computer can select up to 4 words.
@@ -77,8 +70,6 @@ def word_generator(file_words, difficulty):
         list[str]: Letters selected for the round, shuffled into random order.
     """
     
-    
-    
     filtered_words = []
     for word in file_words:
         word = word.lower().strip()
@@ -94,7 +85,7 @@ def word_generator(file_words, difficulty):
         random.shuffle(scrambled_words)
         
         possible_words_count = 0
-        for dict_word in dictionary:
+        for dict_word in list(dictionary)[:2000]:
             if len(dict_word) >= 3:
                 if can_form_word(candidate, dict_word):
                     possible_words_count += 1
@@ -104,7 +95,13 @@ def word_generator(file_words, difficulty):
         if possible_words_count >= 3:
             return candidate, scrambled_words
     
-    return []
+    if filtered_words:
+        fallback = random.choice(filtered_words)
+        scrambled = list(fallback)
+        random.shuffle(scrambled)
+        return fallback, scrambled
+
+    return None
 
 
 def validate_player_words(base_word, submitted_words,word_list):
@@ -235,6 +232,82 @@ def calculate_score(submitted_words, word_list, computer_words):
 
     return score
 
+class WordGame:
+    """
+    Class Wraps the functions and manages the game state
+    """
+    def __init__(self, dictionary, difficulty="easy"):
+        self.dictionary = dictionary
+        self.difficulty = difficulty
+        self.base_word = None
+        self.scrambled = None
+        self.submitted_words = []
+        self.computer_words = []
+        self.player_score = 0
+        self.computer_score = 0
+        
+    def generate_word(self):
+        """Generates the word and scrambled letters using word_generator function"""
+        result = word_generator(list(self.dictionary), self.difficulty)
+        if result:
+            self.base_word, self.scrambled = result
+            return True
+        return False
+    
+    def play_computer_turn(self):
+        """Computer finds words and calculates score using computer_player function"""
+        self.computer_words, self.computer_score = computer_player(
+            self.base_word, 
+            self.difficulty
+        )
+    
+    def validate_words(self):
+        """Validate player's submitted words using validate_player_words function"""
+        return validate_player_words(
+            self.base_word, 
+            self.submitted_words, 
+            self.dictionary
+        )
+    
+    def calculate_player_score(self, valid_words):
+        """Calculate the player's final score using calculate_score function"""
+        self.player_score = calculate_score(
+            valid_words, 
+            self.dictionary, 
+            self.computer_words
+        )
+        return self.player_score
+    
+    def display_results(self, validation_result):
+        """Display the game results"""
+        print("\n" + "=================")
+        print("      ROUND RESULTS")
+        print("=================")
+        print(f"The Base word was: {self.base_word}")
+        print()
+        
+        print("--- YOUR STATS ---")
+        print(f"Valid words    : {validation_result['valid_words']}")
+        if validation_result['invalid_words']:
+            print(f"Invalid words  : {validation_result['invalid_words']}")
+        if validation_result['duplicate_words']:
+            print(f"Duplicates     : {validation_result['duplicate_words']}")
+        print(f"Your score     : {self.player_score}")
+        
+        print()
+        print("--- COMPUTER STATS  ---")
+        print(f"Computer words : {self.computer_words}")
+        print(f"Computer score : {self.computer_score}")
+        print()
+        print("=================")
+        
+        if self.player_score > self.computer_score:
+            print(f"   YOU WIN! ({self.player_score} vs {self.computer_score})")
+        elif self.computer_score > self.player_score:
+            print(f"   COMPUTER WINS! ({self.computer_score} vs {self.player_score})")
+        else:
+            print(f"   TIE! ({self.player_score} vs {self.computer_score})")
+        print("=================")
 
 
 if __name__ == "__main__":
@@ -246,11 +319,13 @@ if __name__ == "__main__":
     difficulty = args.difficulty
     game = WordGame(dictionary, difficulty)
 
-    base_word, scrambled = word_generator(list(dictionary), difficulty)
-    game.base_word = base_word
-    game.scrambled = scrambled
 
-    print("Scrambled letters:", " ".join(scrambled))
+    if not game.generate_word():
+        print("Failed to generate word")
+        exit()
+    
+
+    print("Scrambled letters:", " ".join(game.scrambled))
     
     while True:
         word = input("Enter Word: ")
@@ -260,36 +335,10 @@ if __name__ == "__main__":
         
         game.submitted_words.append(word)
 
-    game.computer_words, computer_score = computer_player(base_word, difficulty)
-
-
-    result = validate_player_words(base_word, game.submitted_words, dictionary)
-    score = calculate_score(game.submitted_words, dictionary, game.computer_words)
+    game.play_computer_turn()
     
-    print("\n" + "=================")
-    print("      ROUND RESULTS")
-    print("=================")
-    print(f"The Base word was: {base_word}")
-    print()
+    validation_result = game.validate_words()
+    game.calculate_player_score(game.submitted_words)
     
-    print("--- YOUR STATS ---")
-    print(f"Valid words    : {result['valid_words']}")
-    if result['invalid_words']:
-        print(f"Invalid words  : {result['invalid_words']}")
-    if result['duplicate_words']:
-        print(f"Duplicates     : {result['duplicate_words']}")
-    print(f"Your score     : {score}")
+    game.display_results(validation_result)
     
-    print()
-    print("--- COMPUTER STATS  ---")
-    print(f"Computer words : {game.computer_words}")
-    print(f"Computer score : {computer_score}")
-    print()
-    print("=================")
-    if score > computer_score:
-        print(f"   YOU WIN! ({score} vs {computer_score})")
-    elif computer_score > score:
-        print(f"   COMPUTER WINS! ({computer_score} vs {score})")
-    else:
-        print(f"   TIE! ({score} vs {computer_score})")
-    print("=================")
