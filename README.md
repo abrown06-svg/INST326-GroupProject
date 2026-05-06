@@ -1,5 +1,9 @@
 # Scrambled
-### Scrambled is a game that takes a random word from a dictionary (word library) and a player must go against a computer in easy or hard more. You are appointed a score based on the length of the words found and if you use special characters. Additionally, if you find a word the computer didn't find, you get +2 points.
+Scrambled is a game that takes a random word from a dictionary, scrambles the letters, and a player must go against a computer in easy or hard mode, tries to make as many valid words as possible from the scrambled letters.
+
+You are appointed a score based on the length of the words found and can get bonus points for using rare letters. Additionally, if you finds a word the computer did not find, you will get 2 points.
+
+Try to get a higher score than the computer by the end of the game!
 
 ## How to Run
 
