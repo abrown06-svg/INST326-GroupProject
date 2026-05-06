@@ -70,14 +70,16 @@ def word_generator(file_words, difficulty):
         list[str]: Letters selected for the round, shuffled into random order.
     """
     
-    filtered_words = []
-    for word in file_words:
-        word = word.lower().strip()
-        if 4<= len(word) <=12:
-            if difficulty == "easy" and len(word) <= 6:
-                filtered_words.append(word)
-            elif difficulty == "hard" and len(word) > 6:
-                filtered_words.append(word)
+    filtered_words = [
+        word.lower().strip()
+        for word in file_words
+        if 4<= len(word.strip()) <=12 and
+        (
+            (difficulty == "easy" and len(word) <= 6) or
+            (difficulty == "hard" and len(word) > 6)
+            
+        )
+    ]
                 
     random.shuffle(filtered_words)
     for candidate in filtered_words:
