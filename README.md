@@ -86,13 +86,14 @@ claimed techniques:
 components:
 - `computer_player` function
 - `can_form_word` function
-- `main program`
+- `WordGame Class`
 
 what it does:
 - creates the computer player’s word choices
 - uses easy mode for shorter words
 - uses hard mode for longer words
 - returns the computer words and score
+- displays results of game
 
 claimed techniques:
 - Lambda Expressions
