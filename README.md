@@ -87,10 +87,8 @@ what it does:
 - returns the computer words and score
 
 claimed techniques:
-- Counter collections
-- sorting
-- random selection
-- function composition
+- Lambda Expressions
+- List Comphrensions
 
 ---
 
