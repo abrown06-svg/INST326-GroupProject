@@ -25,19 +25,22 @@ Requirement: `nltk`
 
 ## Ahmad Brown
 
-functions:
-- `word_generator`
+components:
+- `word_generator` function
+- `WordGame Class`
+- `main program`
 
 what it does:
 - generates scrambled letters based on difficulty
+- makes sure the round has playable word combinations
 - filters words by length and difficulty
 - uses the NLTK word library
+- manages overall game state including player input and scores
+- handles command line input for difficulty selection
 
 claimed techniques:
-- randomization
-- iteration
-- conditional branching
-- external library usage
+- comprehensions or generator expressions
+- the ArgumentParser class from the argparse module
 
 ---
 
@@ -80,9 +83,10 @@ claimed techniques:
 
 ## Xander Boyko
 
-functions:
-- `computer_player`
-- `can_form_word`
+components:
+- `computer_player` function
+- `can_form_word` function
+- `main program`
 
 what it does:
 - creates the computer player’s word choices
