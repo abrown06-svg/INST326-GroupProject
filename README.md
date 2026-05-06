@@ -33,7 +33,7 @@ components:
 what it does:
 - generates scrambled letters based on difficulty
 - makes sure the round has playable word combinations
-- filters words by length and difficulty
+- list comprehension used to filter and transform word list based on length and difficulty
 - uses the NLTK word library
 - manages overall game state including player input and scores
 - handles command line input for difficulty selection
