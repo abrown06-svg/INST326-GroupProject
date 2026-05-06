@@ -96,8 +96,6 @@ claimed techniques:
 
 ---
 
-## Challenges
-...
 
 ## Live Demo
 
