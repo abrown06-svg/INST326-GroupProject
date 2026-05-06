@@ -97,7 +97,7 @@ what it does:
 
 claimed techniques:
 - Lambda Expressions
-- List Comphrensions
+- F Strings
 
 ---
 
