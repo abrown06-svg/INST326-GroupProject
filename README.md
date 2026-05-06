@@ -39,7 +39,7 @@ what it does:
 - handles command line input for difficulty selection
 
 claimed techniques:
-- comprehensions or generator expressions
+- list comprehension
 - the ArgumentParser class from the argparse module
 
 ---
