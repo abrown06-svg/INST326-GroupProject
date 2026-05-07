@@ -40,7 +40,7 @@ what it does:
 
 claimed techniques:
 - list comprehension
-- the ArgumentParser class from the argparse module
+- sequence unpacking 
 
 ---
 
@@ -100,15 +100,15 @@ claimed techniques:
 - F Strings
 
 ---
+Members Claimed Techniques
 
-
-## Live Demo
-
-The demo will show:
-- choosing easy or hard difficulty
-- generating scrambled letters
-- entering player words
-- showing the computer’s words
-- comparing the final scores
-
-If there is time, we can ask the class to suggest one word during the demo.
+| Function/Method | Member | Technique Used|
+| :--- | :---: | ---: |
+| `word_generator` | Ahmad Brown | List Comprehension |
+| `generate_word` and `play_computer_turn` | Ahmad Brown | Sequence Unpacking |
+|  | Kassy Kenge |  |
+|  | Kassy Kenge | |
+| | Xander Boyko | |
+| `display_results` | Xander Boyko | F strings |
+|  | Chang Liu |  |
+|  | Chang Liu |  |
