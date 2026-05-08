@@ -29,7 +29,12 @@ def calculate_score(submitted_words, word_list, computer_words):
         points = 6 if length>=6 else length
 
         # bonus if computer didn't find it
-        if word not in computer_words:
+        users_set = set(submitted_words)
+        computers_set = set(computer_words)
+        
+        unique_words = users_set - computers_set
+        
+        if word in unique_words:
             points += 2
 
         # rare letter bonus
