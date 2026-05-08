@@ -47,18 +47,20 @@ claimed techniques:
 ## Chang Liu / Ashley
 
 functions:
+- `can_build_word` 
 - `validate_player_words`
 
 what it does:
 - checks if submitted words are valid
 - checks if words can be made from the base word
 - tracks duplicate, valid, and invalid words
-
+- returns a basic word-length score
+  
 claimed techniques:
 - iteration
 - conditional branching
-- lists and dictionaries
-- input validation
+- function composition
+- list processing
 
 ---
 
@@ -109,5 +111,5 @@ Members Claimed Techniques
 | `calculate_score` | Kassy Kengne | Set Operations |
 | | Xander Boyko | |
 | `display_results` | Xander Boyko | F strings |
-|  | Chang Liu |  |
-|  | Chang Liu |  |
+| `can_build_word` | Chang Liu | List Processing |
+| `validate_player_words` | Chang Liu | Function Composition |
