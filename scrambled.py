@@ -12,8 +12,7 @@ dictionary = set(
 )
 
 '''
-The computer function checks whether a word can be formed from the base word and tests the letter count. Then it searches through two difficulties.
-The computer can select up to 4 words.
+The computer_player checks whether a word can be formed from the base word and tests the letter count. Then it searches through two difficulties.
 Difficulty Levels:
 Easy: Chooses the shortest words
 Hardest: Chooses the longest possible for the most points
@@ -23,7 +22,7 @@ base_word(str): the word used in the round
 difficulty (str): the difficulty level "easy" or "hard."
 
 Returns:
-tuple: a list of the words selected with a score.
+tuple: a list of the words selected with a score based on the words created.
 '''
 
 # Verify if words can be generated from the word list
@@ -49,7 +48,7 @@ def computer_player(base_word, difficulty="easy"):
         computer_words = random.sample(choices, min(4, len(choices)))
     
     elif difficulty == "hard":
-        # Hard: pick best scoring words (longest)
+        # Hard: pick best-scoring words (longest) more room for points
         valid_words.sort(key=lambda w: len(w), reverse=True)
         computer_words = valid_words[:4]
     
