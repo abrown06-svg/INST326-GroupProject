@@ -26,14 +26,7 @@ def calculate_score(submitted_words, word_list, computer_words):
         # base score
         length = len(word)
 
-        if length == 3:
-            points = 3
-        elif length == 4:
-            points = 4
-        elif length == 5:
-            points = 5
-        else:
-            points = 6
+        points = 6 if length>=6 else length
 
         # bonus if computer didn't find it
         if word not in computer_words:
