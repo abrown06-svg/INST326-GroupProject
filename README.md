@@ -107,9 +107,9 @@ Members Claimed Techniques
 | Function/Method | Member | Technique Used|
 | :--- | :---: | ---: |
 | `word_generator` | Ahmad Brown | List Comprehension |
-| `generate_word` and `play_computer_turn` | Ahmad Brown | Sequence Unpacking |
+| `generate_word`| Ahmad Brown | Sequence Unpacking |
 | `calculate_score` | Kassy Kengne | Set Operations |
-| | Xander Boyko | |
+| `computer_player ` | Xander Boyko | Lambda Expressions |
 | `display_results` | Xander Boyko | F strings |
 | `can_build_word` | Chang Liu | List Processing |
 | `validate_player_words` | Chang Liu | Function Composition |
