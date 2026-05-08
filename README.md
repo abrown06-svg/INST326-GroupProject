@@ -40,7 +40,7 @@ what it does:
 
 claimed techniques:
 - list comprehension
-- sequence unpacking 
+- the ArgumentParser class from the argparse module
 
 ---
 
@@ -107,7 +107,7 @@ Members Claimed Techniques
 | Function/Method | Member | Technique Used|
 | :--- | :---: | ---: |
 | `word_generator` | Ahmad Brown | List Comprehension |
-| `generate_word`| Ahmad Brown | Sequence Unpacking |
+| `main`| Ahmad Brown | the ArgumentParser class from the argparse module |
 | `calculate_score` | Kassy Kengne | Set Operations |
 | `computer_player ` | Xander Boyko | Lambda Expressions |
 | `display_results` | Xander Boyko | F strings |
