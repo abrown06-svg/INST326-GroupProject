@@ -106,8 +106,7 @@ Members Claimed Techniques
 | :--- | :---: | ---: |
 | `word_generator` | Ahmad Brown | List Comprehension |
 | `generate_word` and `play_computer_turn` | Ahmad Brown | Sequence Unpacking |
-|  | Kassy Kenge |  |
-|  | Kassy Kenge | |
+| calculate_score | Kassy Kengne | conditional expressions |
 | | Xander Boyko | |
 | `display_results` | Xander Boyko | F strings |
 |  | Chang Liu |  |
