@@ -63,11 +63,17 @@ def computer_player(base_word, difficulty="easy"):
 def word_generator(file_words, difficulty):
     """
     Randomly selects and scrambles words based on difficulty for a given round. 
+    Aswell as ensures the generated words can form at least three 
+    valid dictionary words before selecting them. 
     Args:
         file_words (list[str]): List of all words loaded from the file.
         difficulty (str): Either "easy", or "hard".
     Returns:
-        list[str]: Letters selected for the round, shuffled into random order.
+    tuple[str, list[str]] | None:
+        The selected base word and its scrambled letters,
+        or None if no valid word could be generated.
+    Side Effects:
+        Randomly shuffles candidate word lists and scrambled letters.
     """
     
     filtered_words = [
@@ -234,7 +240,18 @@ def calculate_score(submitted_words, word_list, computer_words):
 
 class WordGame:
     """
-    Class Wraps the functions and manages the game state
+    Manages the overall game state and gameplay.
+
+    Attributes:
+        dictionary (set[str]): valid game words
+        difficulty (str): selected difficulty level
+        base_word (str | None): word used for current round
+        scrambled (list[str] | None): shuffled letters
+        submitted_words (list[str]): player guesses
+        computer_words (list[str]): computer generated words
+        player_score (int): player's score
+        computer_score (int): computer's score
+    
     """
     def __init__(self, dictionary, difficulty="easy"):
         self.dictionary = dictionary
@@ -247,7 +264,9 @@ class WordGame:
         self.computer_score = 0
         
     def generate_word(self):
-        """Generates the word and scrambled letters using word_generator function"""
+        """
+        Generates the word and scrambled letters using word_generator function
+        """
         result = word_generator(list(self.dictionary), self.difficulty)
         if result:
             self.base_word, self.scrambled = result
@@ -255,14 +274,18 @@ class WordGame:
         return False
     
     def play_computer_turn(self):
-        """Computer finds words and calculates score using computer_player function"""
+        """
+        Computer finds words and calculates score using computer_player function
+        """
         self.computer_words, self.computer_score = computer_player(
             self.base_word, 
             self.difficulty
         )
     
     def validate_words(self):
-        """Validate player's submitted words using validate_player_words function"""
+        """
+        Validate player's submitted words using validate_player_words function
+        """
         return validate_player_words(
             self.base_word, 
             self.submitted_words, 
@@ -270,7 +293,9 @@ class WordGame:
         )
     
     def calculate_player_score(self, valid_words):
-        """Calculate the player's final score using calculate_score function"""
+        """
+        Calculate the player's final score using calculate_score function
+        """
         self.player_score = calculate_score(
             valid_words, 
             self.dictionary, 
@@ -309,8 +334,15 @@ class WordGame:
             print(f"   TIE! ({self.player_score} vs {self.computer_score})")
         print("=================")
 
+def main():
+    """   
+    Main program entry point.
 
-if __name__ == "__main__":
+    Parses difficulty from command line arguments,
+    initializes the game, collects player input,
+    runs the computer turn, calculates scores,
+    and displays round results.
+    """ 
 
     parser = ArgumentParser()
     parser.add_argument("difficulty")
@@ -341,4 +373,7 @@ if __name__ == "__main__":
     game.calculate_player_score(game.submitted_words)
     
     game.display_results(validation_result)
+    
+if __name__ == "__main__":
+    main()
     
